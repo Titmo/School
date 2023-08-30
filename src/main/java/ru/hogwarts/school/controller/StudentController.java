@@ -2,18 +2,17 @@ package ru.hogwarts.school.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.service.StudentService;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.List;
 
 @RestController
 @RequestMapping("student")
 public class StudentController {
-    private  final StudentService studentService;
+    private final StudentService studentService;
 
     public StudentController(StudentService studentService) {
         this.studentService = studentService;
@@ -27,25 +26,30 @@ public class StudentController {
         }
         return ResponseEntity.ok(student);
     }
+
     @PostMapping
-    public Student add (@RequestBody Student student) {
+    public Student add(@RequestBody Student student) {
         return studentService.add(student);
     }
+
     @PutMapping
-    public Student set (@RequestBody Student student) {
+    public Student set(@RequestBody Student student) {
         return studentService.set(student);
     }
+
     @DeleteMapping("{id}")
-    public ResponseEntity<Student> remove (@PathVariable Long id) {
+    public ResponseEntity<Student> remove(@PathVariable Long id) {
         studentService.remove(id);
         return ResponseEntity.ok().build();
     }
+
     @GetMapping("get")
-    public HashMap<Long, Student> get () {
+    public List<Student> get() {
         return studentService.getAll();
     }
-    @GetMapping
-    public ResponseEntity<Collection<Student>> findStudents(@RequestParam(required = false) int age) {
+
+    @GetMapping("findStudents")
+    public ResponseEntity<Collection<Student>> findStudents(@RequestParam(required = false) Integer age) {
         if (age > 0) {
             return ResponseEntity.ok(studentService.findByAge(age));
         }
