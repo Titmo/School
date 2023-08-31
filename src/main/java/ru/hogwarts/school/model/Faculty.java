@@ -14,11 +14,10 @@ public class Faculty {
     @JoinColumn(name = "student_id")
     private Student student;
 
-    public Faculty(long id, String name, String color,Student student) {
+    public Faculty(long id, String name, String color) {
         this.id = id;
         this.name = name;
         this.color = color;
-        this.student=student;
     }
     public Faculty() {
     }
