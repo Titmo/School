@@ -1,0 +1,50 @@
+package ru.hogwarts.school.controller;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import ru.hogwarts.school.model.Student;
+import ru.hogwarts.school.service.StudentService;
+
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+
+@RestController
+@RequestMapping("student")
+public class StudentController {
+    private final StudentService studentService;
+
+    public StudentController(StudentService studentService) {
+        this.studentService = studentService;
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Student>> get(@RequestParam(required = false) Long id,
+                                             @RequestParam(required = false) Integer to,
+                                             @RequestParam(required = false) Integer from) {
+        if (id != null) {
+            return ResponseEntity.ok(Collections.singletonList(studentService.find(id)));
+        }
+        if (from != null || to != null) {
+            return ResponseEntity.ok(studentService.findByAgeBetween(from, to));
+        }
+        return ResponseEntity.ok(studentService.getAll());
+    }
+
+    @PostMapping
+    public Student add(@RequestBody Student student) {
+        return studentService.add(student);
+    }
+
+    @PutMapping
+    public Student set(@RequestBody Student student) {
+        return studentService.set(student);
+    }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity<Student> remove(@PathVariable Long id) {
+        studentService.remove(id);
+        return ResponseEntity.ok().build();
+    }
+
+}
