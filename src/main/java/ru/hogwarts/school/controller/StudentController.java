@@ -18,13 +18,17 @@ public class StudentController {
         this.studentService = studentService;
     }
 
-    @GetMapping("{id}")
-    public ResponseEntity<Student> get(@PathVariable Long id) {
-        Student student = studentService.find(id);
-        if (student == null) {
-            return ResponseEntity.notFound().build();
+    @GetMapping
+    public ResponseEntity<List<Student>> get(@RequestParam(required = false) Long id,
+                                             @RequestParam(required = false) Integer to,
+                                             @RequestParam(required = false) Integer from) {
+        if (id != null) {
+            return ResponseEntity.ok(Collections.singletonList(studentService.find(id)));
         }
-        return ResponseEntity.ok(student);
+        if (from != null || to != null) {
+            return ResponseEntity.ok(studentService.findByAgeBetween(from, to));
+        }
+        return ResponseEntity.ok(studentService.getAll());
     }
 
     @PostMapping
@@ -43,16 +47,4 @@ public class StudentController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("get")
-    public List<Student> get() {
-        return studentService.getAll();
-    }
-
-    @GetMapping("findStudents")
-    public ResponseEntity<Collection<Student>> findStudents(@RequestParam(required = false) Integer age) {
-        if (age > 0) {
-            return ResponseEntity.ok(studentService.findByAge(age));
-        }
-        return ResponseEntity.ok(Collections.emptyList());
-    }
 }

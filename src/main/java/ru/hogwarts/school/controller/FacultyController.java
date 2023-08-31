@@ -18,19 +18,19 @@ public class FacultyController {
         this.facultyService = facultyService;
     }
 
-    @GetMapping("{id}")
-    public ResponseEntity<Faculty> get(@PathVariable Long id) {
-        Faculty faculty = facultyService.find(id);
-        if (faculty == null) {
-            return ResponseEntity.notFound().build();
+    @GetMapping
+    public ResponseEntity<List<Faculty>> get(@RequestParam(required = false) Long id,
+                                             @RequestParam(required = false) String name,
+                                             @RequestParam(required = false) String color) {
+        if (id != null) {
+            return ResponseEntity.ok(Collections.singletonList(facultyService.find(id)));
         }
-        return ResponseEntity.ok(faculty);
+        if ((name != null && !name.isBlank()) || (color != null && !color.isBlank())) {
+            return ResponseEntity.ok(facultyService.findByNameOrColor(name, color));
+        }
+        return ResponseEntity.ok(facultyService.getAll());
     }
 
-    @GetMapping("get")
-    public List<Faculty> get() {
-        return facultyService.getAll();
-    }
 
     @PostMapping
     public Faculty add(@RequestBody Faculty faculty) {
@@ -48,11 +48,4 @@ public class FacultyController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("findFaculties")
-    public ResponseEntity<Collection<Faculty>> findFaculties(@RequestParam(required = false) String color) {
-        if (color != null && !color.isBlank()) {
-            return ResponseEntity.ok(facultyService.findByColor(color));
-        }
-        return ResponseEntity.ok(Collections.emptyList());
-    }
 }
