@@ -31,11 +31,11 @@ public class FacultyControllerRestTemplateTest {
         faculty.setColor("Color");
 
         //get
-        Assertions.assertThat(this.restTemplate.getForObject("http://localhost:"+port+"/faculty", Faculty.class))
+        Assertions.assertThat(this.restTemplate.getForObject("http://localhost:"+port+"/faculty", Faculty[].class))
                 .isNotNull();
-        Assertions.assertThat(this.restTemplate.getForObject("http://localhost:"+port+"/faculty/Воин",Faculty.class))
+        Assertions.assertThat(this.restTemplate.getForObject("http://localhost:"+port+"/faculty?name=Воин",Faculty[].class))
                 .isNotNull();
-        Assertions.assertThat(this.restTemplate.getForObject("http://localhost:"+port+"/faculty/Жёлтый",Faculty.class))
+        Assertions.assertThat(this.restTemplate.getForObject("http://localhost:"+port+"/faculty?color=Жёлтый",Faculty[].class))
                 .isNotNull();
         //post
         Assertions.assertThat(this.restTemplate.postForEntity("http://localhost:"+port+"/faculty",faculty,Faculty.class))

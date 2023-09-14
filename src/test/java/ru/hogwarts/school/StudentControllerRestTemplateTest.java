@@ -31,11 +31,11 @@ public class StudentControllerRestTemplateTest {
         student.setAge(12);
 
         //get
-        Assertions.assertThat(this.restTemplate.getForObject("http://localhost:"+port+"/student",Student.class))
+        Assertions.assertThat(this.restTemplate.getForObject("http://localhost:"+port+"/student",Student[].class))
                 .isNotNull();
-        Assertions.assertThat(this.restTemplate.getForObject("http://localhost:"+port+"/student/2",Student.class))
+        Assertions.assertThat(this.restTemplate.getForObject("http://localhost:"+port+"/student?id=2",Student[].class))
                 .isNotNull();
-        Assertions.assertThat(this.restTemplate.getForObject("http://localhost:"+port+"/student/36/2",Student.class))
+        Assertions.assertThat(this.restTemplate.getForObject("http://localhost:"+port+"/student?to=2&from=36",Student[].class))
                 .isNotNull();
         //post
         Assertions.assertThat(this.restTemplate.postForEntity("http://localhost:"+port+"/student",student,Student.class))
