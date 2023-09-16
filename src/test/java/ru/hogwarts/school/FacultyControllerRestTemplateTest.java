@@ -10,6 +10,7 @@ import ru.hogwarts.school.controller.FacultyController;
 import ru.hogwarts.school.controller.StudentController;
 import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
+
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class FacultyControllerRestTemplateTest {
     @LocalServerPort
@@ -20,28 +21,49 @@ public class FacultyControllerRestTemplateTest {
 
     @Autowired
     private TestRestTemplate restTemplate;
+
     @Test
     void contextLoads() throws Exception {
         Assertions.assertThat(facultyController).isNotNull();
     }
+
     @Test
-    void facultyTest() throws Exception {
+    void facultyGet() throws Exception {
+        Assertions.assertThat(this.restTemplate.getForObject("http://localhost:" + port + "/faculty", Faculty[].class))
+                .isNotNull();
+    }
+
+    @Test
+    void facultyGetFromName() throws Exception {
+        Assertions.assertThat(this.restTemplate.getForObject("http://localhost:" + port + "/faculty?name=Воин", Faculty[].class))
+                .isNotNull();
+    }
+
+    @Test
+    void facultyGetFromColor() throws Exception {
+        Assertions.assertThat(this.restTemplate.getForObject("http://localhost:" + port + "/faculty?color=Жёлтый", Faculty[].class))
+                .isNotNull();
+    }
+
+    @Test
+    void facultyPost() throws Exception {
         Faculty faculty = new Faculty();
         faculty.setName("Name");
         faculty.setColor("Color");
+        Assertions.assertThat(this.restTemplate.postForEntity("http://localhost:" + port + "/faculty", faculty, Faculty.class))
+                .isNotNull();
+    }
 
-        //get
-        Assertions.assertThat(this.restTemplate.getForObject("http://localhost:"+port+"/faculty", Faculty[].class))
+    @Test
+    void facultyDelete() throws Exception {
+       // Assertions.assertThat(this.restTemplate.delete("http://localhost:" + port + "/faculty/20"));
+    }
+    @Test
+    void facultyPut() throws Exception {
+        Faculty faculty = new Faculty();
+        faculty.setName("Name");
+        faculty.setColor("Color");
+        Assertions.assertThat(this.restTemplate.put("http://localhost:" + port + "/faculty", faculty, Faculty.class))
                 .isNotNull();
-        Assertions.assertThat(this.restTemplate.getForObject("http://localhost:"+port+"/faculty?name=Воин",Faculty[].class))
-                .isNotNull();
-        Assertions.assertThat(this.restTemplate.getForObject("http://localhost:"+port+"/faculty?color=Жёлтый",Faculty[].class))
-                .isNotNull();
-        //post
-        Assertions.assertThat(this.restTemplate.postForEntity("http://localhost:"+port+"/faculty",faculty,Faculty.class))
-                .isNotNull();
-        //delete
-        //  Assertions.assertThat(this.restTemplate.delete("http://localhost:"+port+"/faculty/"+student.getId());
-
     }
 }

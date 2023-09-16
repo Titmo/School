@@ -18,6 +18,7 @@ import ru.hogwarts.school.repository.StudentRepository;
 import ru.hogwarts.school.service.AvatarService;
 import ru.hogwarts.school.service.StudentService;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -43,7 +44,7 @@ public class StudentControllerWebMvcTest {
     @InjectMocks
     private StudentController studentController;
     @Test
-    public void saveStudentTest() throws Exception {
+    void saveStudentTest() throws Exception {
         Long id = 0L;
         String name = "Name";
         int age =10;
@@ -57,7 +58,6 @@ public class StudentControllerWebMvcTest {
         student.setAge(age);
 
         when(studentRepository.save(any(Student.class))).thenReturn(student);
-        when(studentRepository.findById(any(Long.class))).thenReturn(Optional.of(student));
 
         mockMvc.perform(MockMvcRequestBuilders
                         .post("/student")
@@ -69,10 +69,81 @@ public class StudentControllerWebMvcTest {
                 .andExpect(jsonPath("$.name").value(name))
                 .andExpect(jsonPath("$.age").value(age));
 
+    }
+    @Test
+    void getIdStudentTest() throws Exception {
+        Long id = 0L;
+        String name = "Name";
+        int age =10;
+
+        JSONObject studentObject = new JSONObject();
+        studentObject.put("name", name);
+        studentObject.put("age", age);
+
+        Student student = new Student();
+        student.setName(name);
+        student.setAge(age);
+        when(studentRepository.findById(any(Long.class))).thenReturn(Optional.of(student));
         mockMvc.perform(MockMvcRequestBuilders
                         .get("/student")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
+    }
+    @Test
+    void getStudentTest() throws Exception {
+        Long id = 0L;
+        String name = "Name";
+        int age =10;
 
+        JSONObject studentObject = new JSONObject();
+        studentObject.put("name", name);
+        studentObject.put("age", age);
+
+        Student student = new Student();
+        student.setName(name);
+        student.setAge(age);
+        when(studentRepository.findAll()).thenReturn(Student[]);
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get("/student")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+    @Test
+    void getByAgeBetweenStudentTest() throws Exception {
+        Long id = 0L;
+        String name = "Name";
+        int age =10;
+
+        JSONObject studentObject = new JSONObject();
+        studentObject.put("name", name);
+        studentObject.put("age", age);
+
+        Student student = new Student();
+        student.setName(name);
+        student.setAge(age);
+        when(studentRepository.findByAgeBetween(any(Integer.class),any(Integer.class))).thenReturn(Optional.of(student));
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get("/student")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+    @Test
+    void deleteStudentTest() throws Exception {
+        Long id = 0L;
+        String name = "Name";
+        int age =10;
+
+        JSONObject studentObject = new JSONObject();
+        studentObject.put("name", name);
+        studentObject.put("age", age);
+
+        Student student = new Student();
+        student.setName(name);
+        student.setAge(age);
+        when(studentRepository.deleteById(any(Long.class))).thenReturn(status().isOk());
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get("/student")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
     }
 }
