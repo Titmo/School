@@ -1,13 +1,21 @@
 package ru.hogwarts.school;
 
+
+
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.http.ResponseEntity;
 import ru.hogwarts.school.controller.StudentController;
 import ru.hogwarts.school.model.Student;
+
+import java.util.stream.Collectors;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static ru.hogwarts.school.Constant.TEST_STUDENT_1;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class StudentControllerRestTemplateTest {
@@ -20,6 +28,7 @@ public class StudentControllerRestTemplateTest {
 
     @Autowired
     private TestRestTemplate restTemplate;
+
 
     @Test
     void contextLoads() throws Exception {
@@ -56,16 +65,29 @@ public class StudentControllerRestTemplateTest {
         Assertions.assertThat(this.restTemplate.postForEntity("http://localhost:" + port + "/student", student, Student.class))
                 .isNotNull();
     }
-    @Test
-    void studentDelete() throws Exception {
-        Assertions.assertThat(this.restTemplate.delete("http://localhost:"+port+"/student/21"));
+    private Long findStudent(Student student) {
+        return studentController.getAll().stream()
+                .filter(e -> e.getName().equals(student.getName()))
+                .collect(Collectors.toList())
+                .stream()
+                .filter(e -> e.getAge() == student.getAge())
+                .collect(Collectors.toList())
+                .stream().findFirst()
+                .get()
+                .getId();
     }
     @Test
+    void studentDelete() throws Exception {
+        studentController.add(TEST_STUDENT_1);
+        Long studentTestId = findStudent(TEST_STUDENT_1);
+        restTemplate.delete("http://localhost:" + port + "/student" + "/" + studentTestId, String.class);
+    }
+
+
+    @Test
     void studentPut() throws Exception {
-        Student student = new Student();
-        student.setName("Name");
-        student.setAge(12);
-        Assertions.assertThat(this.restTemplate.put("http://localhost:" + port + "/student", student);)
+        this.restTemplate.put("http://localhost:" + port + "/student", TEST_STUDENT_1, Student.class);
+
     }
 
 

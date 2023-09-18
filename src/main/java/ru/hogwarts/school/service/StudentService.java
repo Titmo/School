@@ -30,7 +30,7 @@ public class StudentService {
         studentRepository.deleteById(id);
     }
 
-    public List<Student> getAll() {
+    public  Collection<Student> getAll() {
         return studentRepository.findAll();
     }
 

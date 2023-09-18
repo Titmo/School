@@ -33,7 +33,7 @@ public class StudentController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Student>> get(@RequestParam(required = false) Long id,
+    public ResponseEntity< Collection<Student> > get(@RequestParam(required = false) Long id,
                                              @RequestParam(required = false) Integer to,
                                              @RequestParam(required = false) Integer from) {
         if (id != null) {
@@ -42,7 +42,7 @@ public class StudentController {
         if (from != null || to != null) {
             return ResponseEntity.ok(studentService.findByAgeBetween(from, to));
         }
-        return ResponseEntity.ok(studentService.getAll());
+        return ResponseEntity.ok((List<Student>) studentService.getAll());
     }
 
     @PostMapping
@@ -95,5 +95,9 @@ public class StudentController {
             response.setContentLength((int) avatar.getFileSize());
             is.transferTo(os);
         }
+    }
+
+    public Collection<Student> getAll() {
+        return studentService.getAll();
     }
 }

@@ -11,6 +11,9 @@ import ru.hogwarts.school.controller.StudentController;
 import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static ru.hogwarts.school.Constant.TEST_FACULTY_1;
+
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class FacultyControllerRestTemplateTest {
     @LocalServerPort
@@ -56,14 +59,10 @@ public class FacultyControllerRestTemplateTest {
 
     @Test
     void facultyDelete() throws Exception {
-       // Assertions.assertThat(this.restTemplate.delete("http://localhost:" + port + "/faculty/20"));
+        restTemplate.delete("http://localhost:" + port + "/faculty" + "/" + TEST_FACULTY_1.getId(), String.class);
     }
     @Test
     void facultyPut() throws Exception {
-        Faculty faculty = new Faculty();
-        faculty.setName("Name");
-        faculty.setColor("Color");
-        Assertions.assertThat(this.restTemplate.put("http://localhost:" + port + "/faculty", faculty, Faculty.class))
-                .isNotNull();
+        this.restTemplate.put("http://localhost:" + port + "/faculty", TEST_FACULTY_1, String.class);
     }
 }
