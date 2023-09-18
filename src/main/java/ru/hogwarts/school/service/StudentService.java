@@ -1,5 +1,6 @@
 package ru.hogwarts.school.service;
 
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.repository.StudentRepository;
@@ -40,5 +41,16 @@ public class StudentService {
 
     public List<Student> findByAgeBetween(Integer from, Integer to) {
         return studentRepository.findByAgeBetween(from, to);
+    }
+
+    public Long numberOfAllStudents() {
+        return studentRepository.numberOfAllStudents();
+    }
+    public Long averageAge () {
+        return studentRepository.averageAge();
+    }
+
+    public List<Student> lastFiveStudent() {
+        return studentRepository.lastFiveStudent();
     }
 }

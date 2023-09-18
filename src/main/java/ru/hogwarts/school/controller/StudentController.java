@@ -33,9 +33,9 @@ public class StudentController {
     }
 
     @GetMapping
-    public ResponseEntity< Collection<Student> > get(@RequestParam(required = false) Long id,
-                                             @RequestParam(required = false) Integer to,
-                                             @RequestParam(required = false) Integer from) {
+    public ResponseEntity<Collection<Student>> get(@RequestParam(required = false) Long id,
+                                                   @RequestParam(required = false) Integer to,
+                                                   @RequestParam(required = false) Integer from) {
         if (id != null) {
             return ResponseEntity.ok(Collections.singletonList(studentService.find(id)));
         }
@@ -72,7 +72,7 @@ public class StudentController {
     }
 
     @GetMapping(value = "/{id}/avatar/preview")
-    public ResponseEntity<byte[]>downloadAvatar(@PathVariable Long id) {
+    public ResponseEntity<byte[]> downloadAvatar(@PathVariable Long id) {
         Avatar avatar = avatarService.findAvatar(id);
 
         HttpHeaders headers = new HttpHeaders();
@@ -94,6 +94,37 @@ public class StudentController {
             response.setContentType(avatar.getMediaType());
             response.setContentLength((int) avatar.getFileSize());
             is.transferTo(os);
+        }
+    }
+
+    @GetMapping("/numberOfAllStudents")
+    public ResponseEntity<Long> numberOfAllStudents() {
+        return ResponseEntity.ok(studentService.numberOfAllStudents());
+    }
+
+    @GetMapping("/averageAge")
+    public ResponseEntity<Long> averageAge() {
+        return ResponseEntity.ok(studentService.averageAge());
+    }
+
+    @GetMapping("/lastFiveStudent")
+    public ResponseEntity<List<Student>> lastFiveStudent() {
+        return ResponseEntity.ok(studentService.lastFiveStudent());
+    }
+
+    @GetMapping("/pagingAvatar/{page}/{size}")
+    public ResponseEntity<byte[]> AvatarPaging(@PathVariable Integer page,
+                                               @PathVariable Integer size) {
+        List<Avatar> avatars = avatarService.paging(page,size);
+        for (int i = 0; i < size; i++) {
+            avatars.get(i);
+            Avatar avatar = avatars.get(1);
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.parseMediaType(avatar.getMediaType()));
+            headers.setContentLength(avatar.getData().length);
+
+            return ResponseEntity.status(HttpStatus.OK).headers(headers).body(avatar.getData());
         }
     }
 
