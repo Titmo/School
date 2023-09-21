@@ -113,19 +113,9 @@ public class StudentController {
     }
 
     @GetMapping("/pagingAvatar/{page}/{size}")
-    public ResponseEntity<byte[]> AvatarPaging(@PathVariable Integer page,
-                                               @PathVariable Integer size) {
-        List<Avatar> avatars = avatarService.paging(page,size);
-        for (int i = 0; i < size; i++) {
-            avatars.get(i);
-            Avatar avatar = avatars.get(1);
-
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.parseMediaType(avatar.getMediaType()));
-            headers.setContentLength(avatar.getData().length);
-
-            return ResponseEntity.status(HttpStatus.OK).headers(headers).body(avatar.getData());
-        }
+    public ResponseEntity<List<Avatar>> AvatarPaging(@PathVariable Integer page,
+                                                     @PathVariable Integer size) {
+        return ResponseEntity.ok(avatarService.paging(page, size));
     }
 
     public Collection<Student> getAll() {
