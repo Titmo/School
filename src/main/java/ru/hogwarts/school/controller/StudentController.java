@@ -61,61 +61,19 @@ public class StudentController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping(value = "/{id}/avatar", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<String> uploadAvatar(@PathVariable Long id, @RequestParam MultipartFile avatar) throws IOException {
-        if (avatar.getSize() > 1024 * 300) {
-            return ResponseEntity.badRequest().body("File is too big");
-        }
-
-        avatarService.uploadAvatar(id, avatar);
-        return ResponseEntity.ok().build();
-    }
-
-    @GetMapping(value = "/{id}/avatar/preview")
-    public ResponseEntity<byte[]> downloadAvatar(@PathVariable Long id) {
-        Avatar avatar = avatarService.findAvatar(id);
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.parseMediaType(avatar.getMediaType()));
-        headers.setContentLength(avatar.getData().length);
-
-        return ResponseEntity.status(HttpStatus.OK).headers(headers).body(avatar.getData());
-    }
-
-    @GetMapping(value = "/{id}/avatar")
-    public void downloadAvatar(@PathVariable Long id, HttpServletResponse response) throws IOException {
-        Avatar avatar = avatarService.findAvatar(id);
-
-        Path path = Path.of(avatar.getFilePath());
-
-        try (InputStream is = Files.newInputStream(path);
-             OutputStream os = response.getOutputStream();) {
-            response.setStatus(200);
-            response.setContentType(avatar.getMediaType());
-            response.setContentLength((int) avatar.getFileSize());
-            is.transferTo(os);
-        }
-    }
-
     @GetMapping("/numberOfAllStudents")
     public ResponseEntity<Long> numberOfAllStudents() {
         return ResponseEntity.ok(studentService.numberOfAllStudents());
     }
 
     @GetMapping("/averageAge")
-    public ResponseEntity<Long> averageAge() {
+    public ResponseEntity<Double> averageAge() {
         return ResponseEntity.ok(studentService.averageAge());
     }
 
     @GetMapping("/lastFiveStudent")
     public ResponseEntity<List<Student>> lastFiveStudent() {
         return ResponseEntity.ok(studentService.lastFiveStudent());
-    }
-
-    @GetMapping("/pagingAvatar/{page}/{size}")
-    public ResponseEntity<List<Avatar>> AvatarPaging(@PathVariable Integer page,
-                                                     @PathVariable Integer size) {
-        return ResponseEntity.ok(avatarService.paging(page, size));
     }
 
     public Collection<Student> getAll() {

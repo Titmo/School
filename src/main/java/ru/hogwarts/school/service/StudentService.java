@@ -46,7 +46,7 @@ public class StudentService {
     public Long numberOfAllStudents() {
         return studentRepository.numberOfAllStudents();
     }
-    public Long averageAge () {
+    public double averageAge () {
         return studentRepository.averageAge();
     }
 
