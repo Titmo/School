@@ -76,6 +76,21 @@ public class StudentController {
         return ResponseEntity.ok(studentService.lastFiveStudent());
     }
 
+    @GetMapping("/firstLetter/{letter}")
+    public List<String> firstLetter(@PathVariable String letter) {
+        return studentService.firstLetterA(letter);
+    }
+
+    @GetMapping("/avgAge")
+    public Double avgAge() {
+        return studentService.avgAge();
+    }
+    @GetMapping("/millions")
+    public int millions() {
+        return studentService.millions();
+    }
+
+
     public Collection<Student> getAll() {
         return studentService.getAll();
     }

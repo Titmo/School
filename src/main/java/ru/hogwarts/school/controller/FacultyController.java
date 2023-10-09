@@ -48,4 +48,9 @@ public class FacultyController {
         return ResponseEntity.ok().build();
     }
 
+    @GetMapping("/longestNameOfTheFaculty")
+    public String longestNameOfTheFaculty() {
+        return facultyService.longestNameOfTheFaculty();
+    }
+
 }
