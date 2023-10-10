@@ -85,9 +85,19 @@ public class StudentController {
     public Double avgAge() {
         return studentService.avgAge();
     }
+
     @GetMapping("/millions")
     public int millions() {
         return studentService.millions();
+    }
+
+    @GetMapping("/printName")
+    public void printName() {
+        studentService.printStudentName();
+    }
+@GetMapping("/printSyncName")
+    public void printSyncName() {
+        studentService.printSyncStudentName();
     }
 
 

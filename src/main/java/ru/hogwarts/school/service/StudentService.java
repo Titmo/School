@@ -15,6 +15,7 @@ public class StudentService {
     private final StudentRepository studentRepository;
 
     private final Logger logger = LoggerFactory.getLogger(StudentService.class);
+    private final Object object = new Object();
 
     public StudentService(StudentRepository studentRepository) {
         this.studentRepository = studentRepository;
@@ -95,7 +96,45 @@ public class StudentService {
                 .limit(1_000_000)
                 .reduce(0, (a, b) -> a + b);
         long finish = System.currentTimeMillis();
-        logger.info("start-stop "+(finish-start));
+        logger.info("start-stop " + (finish - start));
         return result;
+    }
+
+    public void printStudentName() {
+        List<Student> students = studentRepository.findAll();
+        printStudentName(students.get(0));
+        printStudentName(students.get(1));
+        new Thread(() -> {
+            printStudentName(students.get(2));
+            printStudentName(students.get(3));
+        }).start();
+        new Thread(() -> {
+            printStudentName(students.get(4));
+            printStudentName(students.get(5));
+        }).start();
+    }
+
+    private void printStudentName(Student student) {
+        System.out.println(Thread.currentThread() + "" + student);
+    }
+
+    public void printSyncStudentName() {
+        List<Student> students = studentRepository.findAll();
+        printStudentName(students.get(0));
+        printStudentName(students.get(1));
+        new Thread(() -> {
+            printStudentName(students.get(2));
+            printStudentName(students.get(3));
+        }).start();
+        new Thread(() -> {
+            printStudentName(students.get(4));
+            printStudentName(students.get(5));
+        }).start();
+    }
+
+    private void printSyncStudentName(Student student) {
+        synchronized (object) {
+            System.out.println(Thread.currentThread() + "" + student);
+        }
     }
 }
